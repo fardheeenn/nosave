@@ -1,0 +1,76 @@
+{
+  "expo": {
+    "name": "NoSave",
+    "slug": "nosave",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F7F5F2"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1A1814"
+      },
+      "package": "com.nosave.app",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.READ_CALL_LOG",
+        "android.permission.READ_CONTACTS",
+        "android.permission.INTERNET"
+      ],
+      "queries": [
+        {
+          "package": "com.whatsapp"
+        },
+        {
+          "package": "com.whatsapp.w4b"
+        },
+        {
+          "package": "org.telegram.messenger"
+        },
+        {
+          "package": "org.thoughtcrime.securesms"
+        }
+      ]
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.nosave.app",
+      "infoPlist": {
+        "NSContactsUsageDescription": "NoSave uses contacts to show names next to recent call numbers. Nothing leaves your device.",
+        "LSApplicationQueriesSchemes": [
+          "whatsapp",
+          "tg",
+          "sgnl"
+        ]
+      }
+    },
+    "plugins": [
+      [
+        "react-native-permissions",
+        {
+          "androidPermissions": [
+            "android.permission.READ_CALL_LOG",
+            "android.permission.READ_CONTACTS"
+          ]
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "nosave-app-001"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
+  }
+}
