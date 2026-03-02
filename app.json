@@ -2,21 +2,11 @@
   "expo": {
     "name": "NoSave",
     "slug": "nosave",
-    "owner": "nosave-owner",
     "version": "1.0.0",
-    "orientation": "portrait",
-    "userInterfaceStyle": "light",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "sdkVersion": "51.0.0",
+    "platforms": ["android"],
     "android": {
-      "package": "com.nosave.app",
-      "versionCode": 1,
-      "permissions": [
-        "android.permission.READ_CALL_LOG",
-        "android.permission.READ_CONTACTS",
-        "android.permission.INTERNET"
-      ]
+      "package": "com.nosave.app"
     }
   }
 }
