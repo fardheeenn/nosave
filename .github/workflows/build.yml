@@ -33,8 +33,13 @@ jobs:
       - name: Build APK
         run: |
           cd android
-          # This line deletes the broken splash screen file
+          # Delete the broken splash screen image reference
           rm -rf app/src/main/res/drawable/splashscreen.xml
+          
+          # Force the styles to stop looking for a splash screen
+          # This replaces the "splashscreen" reference with a standard transparent background
+          find app/src/main/res/values -name "styles.xml" -exec sed -i 's/@drawable\/splashscreen/@android:color\/transparent/g' {} +
+          
           chmod +x gradlew
           ./gradlew assembleDebug -x lint --no-daemon
           
