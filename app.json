@@ -2,6 +2,7 @@
   "expo": {
     "name": "NoSave",
     "slug": "nosave",
+    "owner": "nosave-owner",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
@@ -9,9 +10,6 @@
       "**/*"
     ],
     "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#1A1814"
-      },
       "package": "com.nosave.app",
       "versionCode": 1,
       "permissions": [
