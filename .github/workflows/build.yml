@@ -32,12 +32,15 @@ jobs:
 
       - name: Build APK
         run: |
-          cd android
-          # Delete the broken splash screen image reference
-          rm -rf app/src/main/res/drawable/splashscreen.xml
+          # 1. Create the folder where the bundled code goes
+          mkdir -p android/app/src/main/assets
           
-          # Force the styles to stop looking for a splash screen
-          # This replaces the "splashscreen" reference with a standard transparent background
+          # 2. Bundle the JavaScript code (The Missing Step)
+          npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+          
+          cd android
+          # 3. Clean up the splash screen leftovers again
+          rm -rf app/src/main/res/drawable/splashscreen.xml
           find app/src/main/res/values -name "styles.xml" -exec sed -i 's/@drawable\/splashscreen/@android:color\/transparent/g' {} +
           
           chmod +x gradlew
