@@ -28,13 +28,13 @@ jobs:
           npx expo install --fix
 
       - name: Prebuild Android
-        run: npx expo prebuild --platform android --clean
+        run: npx expo prebuild --platform android --no-install
 
       - name: Build APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug -x lint -x test --no-daemon
+          ./gradlew assembleDebug -x lint --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
