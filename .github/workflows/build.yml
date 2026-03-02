@@ -32,14 +32,14 @@ jobs:
 
       - name: Build APK
         run: |
-          # 1. Create the folder where the bundled code goes
+          # 1. Ensure the assets folder exists
           mkdir -p android/app/src/main/assets
           
-          # 2. Bundle the JavaScript code (The Missing Step)
-          npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+          # 2. Bundle the code using the Expo CLI (this is more reliable for Expo 51)
+          npx expo export:embed --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
           
           cd android
-          # 3. Clean up the splash screen leftovers again
+          # 3. Clean up the splash screen leftovers
           rm -rf app/src/main/res/drawable/splashscreen.xml
           find app/src/main/res/values -name "styles.xml" -exec sed -i 's/@drawable\/splashscreen/@android:color\/transparent/g' {} +
           
