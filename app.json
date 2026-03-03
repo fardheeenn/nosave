@@ -3,10 +3,29 @@
     "name": "NoSave",
     "slug": "nosave",
     "version": "1.0.0",
-    "sdkVersion": "51.0.0",
-    "platforms": ["android"],
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
-      "package": "com.nosave.app"
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.nosave.app",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.READ_CALL_LOG",
+        "android.permission.READ_CONTACTS",
+        "android.permission.INTERNET"
+      ]
     }
   }
 }
