@@ -32,16 +32,14 @@ jobs:
 
       - name: Build APK
         run: |
-          # 1. Ensure assets folder for the bundle exists
           mkdir -p android/app/src/main/assets
-          
-          # 2. Bundle the code
+          # This 'dev false' flag is what removes the lag
           npx expo export:embed --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
           
           cd android
-          # NOTE: We removed the 'rm -rf' and 'sed' lines so your logo stays!
           chmod +x gradlew
-          ./gradlew assembleDebug -x lint --no-daemon
+          # Changed to assembleRelease for a small, fast app
+          ./gradlew assembleRelease --no-daemon
           
       - name: Upload APK
         uses: actions/upload-artifact@v4
