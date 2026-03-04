@@ -25,19 +25,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build Optimized APK
+      - name: Build APK (Optimized Release)
         run: |
-          # 1. Prepare the assets folder for the bundle
-          mkdir -p android/app/src/main/assets
+          # 1. Install Expo CLI locally
+          npx expo prebuild --platform android
           
-          # 2. Bundle the code with 'dev false' (This removes lag and shrinks size)
-          npx expo export:embed --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
-          
+          # 2. Navigate to the generated folder
           cd android
-          # 3. Clean up any leftover splash references
-          rm -f app/src/main/res/drawable/splashscreen.xml
-          find app/src/main/res/values -name "styles.xml" -exec sed -i 's/@drawable\/splashscreen/@android:color\/transparent/g' {} +
           
-          # 4. Compile the RELEASE version (Small and Fast)
+          # 3. Build the Release version (This handles shrinking & lag)
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
