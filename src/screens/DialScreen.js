@@ -10,7 +10,8 @@ import { COUNTRY_CODES, APPS, STORAGE_KEYS } from '../constants';
 import { buildUrl, isValidNumber, relativeTime, parseClipboard, detectCC } from '../utils';
 import { WhatsAppIcon, TelegramIcon, SignalIcon, getAppIcon } from '../icons';
 
-export default function DialScreen() {
+// CHANGED: Added props to the function signature
+export default function DialScreen({ pendingNum, onPendingConsumed }) {
   const [cc, setCC]               = useState('+91');
   const [ccFlag, setCCFlag]       = useState('🇮🇳');
   const [num, setNum]             = useState('');
@@ -20,6 +21,21 @@ export default function DialScreen() {
   const [clipHint, setClipHint]   = useState(null);
   const [err, setErr]             = useState('');
   const shakeAnim                 = useRef(new Animated.Value(0)).current;
+
+  // NEW: Effect to catch numbers coming from the Recents tab
+  useEffect(() => {
+    if (pendingNum) {
+      if (pendingNum.cc) {
+        setCC(pendingNum.cc);
+        const found = COUNTRY_CODES.find(c => c.code === pendingNum.cc);
+        if (found) setCCFlag(found.flag);
+      }
+      setNum(pendingNum.num);
+      setErr('');
+      // Tells the main App to clear the memory after we've filled the box
+      if (onPendingConsumed) onPendingConsumed();
+    }
+  }, [pendingNum]);
 
   useEffect(() => {
     loadSaved();
@@ -77,7 +93,6 @@ export default function DialScreen() {
       Alert.alert('App not installed', `Please install ${APPS.find(a => a.id === appId)?.name} first.`);
       return;
     }
-    // Save to history
     const h = history.filter(x => !(x.cc === cc && x.num === clean));
     const updated = [{ cc, num: clean, app: appId, ts: Date.now() }, ...h].slice(0, 5);
     setHistory(updated);
@@ -118,11 +133,9 @@ export default function DialScreen() {
   return (
     <ScrollView style={s.scroll} contentContainerStyle={s.container} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
 
-      {/* Dial Card */}
       <View style={s.card}>
         <Text style={s.cardLabel}>ENTER NUMBER</Text>
 
-        {/* Phone row */}
         <Animated.View style={[s.phoneRow, { transform: [{ translateX: shakeAnim }] }]}>
           <TouchableOpacity style={s.ccBtn} onPress={() => setShowPicker(true)} activeOpacity={0.75}>
             <Text style={s.ccFlag}>{ccFlag}</Text>
@@ -140,14 +153,12 @@ export default function DialScreen() {
           />
         </Animated.View>
 
-        {/* Hints */}
         {clipHint ? (
           <View style={s.clipTag}><Text style={s.clipText}>✦ {clipHint}</Text></View>
         ) : err ? (
           <View style={s.errTag}><Text style={s.errText}>⚠ {err}</Text></View>
         ) : <View style={{ height: 8 }} />}
 
-        {/* App buttons */}
         <View style={s.appsArea}>
           <Text style={s.appsLabel}>OPEN CONVERSATION IN</Text>
           <View style={s.appsRow}>
@@ -167,7 +178,6 @@ export default function DialScreen() {
         </View>
       </View>
 
-      {/* History */}
       {history.length > 0 && (
         <View style={s.section}>
           <View style={s.secHead}>
@@ -192,7 +202,6 @@ export default function DialScreen() {
         </View>
       )}
 
-      {/* Country Picker Modal */}
       <Modal visible={showPicker} animationType="slide" presentationStyle="pageSheet">
         <View style={s.modal}>
           <View style={s.modalHeader}>
