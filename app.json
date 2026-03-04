@@ -2,25 +2,24 @@
   "expo": {
     "name": "NoSave",
     "slug": "nosave",
-    // ... keep your other settings ...
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F7F5F2"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "package": "com.nosave.app",
-      "versionCode": 1,
-      "intentFilters": [
-        {
-          "action": "VIEW",
-          "data": [
-            { "scheme": "whatsapp" },
-            { "scheme": "tg" },
-            { "scheme": "sgnl" }
-          ]
-        }
-      ],
-      "permissions": [
-        "android.permission.READ_CALL_LOG",
-        "android.permission.READ_CONTACTS",
-        "android.permission.INTERNET"
-      ]
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#F7F5F2"
+      }
     }
   }
 }
