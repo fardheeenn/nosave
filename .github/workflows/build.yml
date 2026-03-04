@@ -1,4 +1,4 @@
-name: Build NoSave APK
+name: Build NoSave Optimized
 on:
   push:
     branches: [main, master]
@@ -23,27 +23,21 @@ jobs:
           distribution: 'temurin'
 
       - name: Install dependencies
-        run: |
-          npm install
-          npx expo install --fix
+        run: npm install
 
-      - name: Prebuild Android
-        run: npx expo prebuild --platform android --no-install
-
-      - name: Build APK
+      - name: Build Optimized APK
         run: |
+          # 1. Prepare the assets folder for the bundle
           mkdir -p android/app/src/main/assets
-          # This 'dev false' flag is what removes the lag
+          
+          # 2. Bundle the code with 'dev false' (This removes lag and shrinks size)
           npx expo export:embed --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
           
           cd android
-          chmod +x gradlew
-          # Changed to assembleRelease for a small, fast app
-          ./gradlew assembleRelease --no-daemon
+          # 3. Clean up any leftover splash references
+          rm -f app/src/main/res/drawable/splashscreen.xml
+          find app/src/main/res/values -name "styles.xml" -exec sed -i 's/@drawable\/splashscreen/@android:color\/transparent/g' {} +
           
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: NoSave-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 7
+          # 4. Compile the RELEASE version (Small and Fast)
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
