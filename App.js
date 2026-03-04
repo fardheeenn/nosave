@@ -5,16 +5,16 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
-import { STORAGE_KEYS, COUNTRY_CODES } from './src/constants';
+import { STORAGE_KEYS } from './src/constants';
 import { NoSaveLogo } from './src/icons';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import DialScreen from './src/screens/DialScreen';
 import RecentsScreen from './src/screens/RecentsScreen';
 
 export default function App() {
-  const [onboarded, setOnboarded] = useState(null); // null = loading
+  const [onboarded, setOnboarded] = useState(null); 
   const [tab, setTab]             = useState('dial');
-  const [pendingNum, setPendingNum] = useState(null); // { cc, num } from recents
+  const [pendingNum, setPendingNum] = useState(null); 
   const tabAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -38,16 +38,13 @@ export default function App() {
     }).start();
   }
 
-  // Called from RecentsScreen when user taps a call log entry
   function handleSelectFromRecents(cc, num) {
     setPendingNum({ cc, num });
     switchTab('dial');
   }
 
-  // Loading state
   if (onboarded === null) return <View style={{ flex: 1, backgroundColor: '#F7F5F2' }} />;
 
-  // Onboarding
   if (!onboarded) {
     return <OnboardingScreen onAllow={() => finishOnboarding(true)} onSkip={() => finishOnboarding(false)} />;
   }
@@ -58,66 +55,64 @@ export default function App() {
   });
 
   return (
-    <SafeAreaView style={s.safe}>
-      <ExpoStatusBar style="dark" backgroundColor="#F7F5F2" />
+    <View style={s.mainContainer}>
+      <SafeAreaView style={s.safe}>
+        <ExpoStatusBar style="dark" backgroundColor="#F7F5F2" />
 
-      {/* Top Bar */}
-      <View style={s.topbar}>
-        <View style={s.topbarLeft}>
-          <View style={s.logoChip}>
-            <NoSaveLogo size={20} />
+        {/* Top Bar */}
+        <View style={s.topbar}>
+          <View style={s.topbarLeft}>
+            <View style={s.logoChip}>
+              <NoSaveLogo size={20} />
+            </View>
+            <Text style={s.appName}>NoSave</Text>
           </View>
-          <Text style={s.appName}>NoSave</Text>
+          <View style={s.badge}>
+            <Text style={s.badgeText}>PRIVATE & LOCAL</Text>
+          </View>
         </View>
-        <View style={s.badge}>
-          <Text style={s.badgeText}>PRIVATE & LOCAL</Text>
-        </View>
-      </View>
 
-      {/* Tabs */}
-      <View style={s.tabs}>
-        <Animated.View style={[s.tabBg, { left: tabBgLeft }]} />
-        <TouchableOpacity style={s.tab} onPress={() => switchTab('dial')} activeOpacity={0.8}>
-          <Text style={[s.tabText, tab === 'dial' && s.tabTextOn]}>Dial</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={s.tab} onPress={() => switchTab('recents')} activeOpacity={0.8}>
-          <Text style={[s.tabText, tab === 'recents' && s.tabTextOn]}>Recents</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Panels */}
-      <View style={s.panels}>
-        <View style={[s.panel, tab !== 'dial' && s.hidden]}>
-          <DialScreen pendingNum={pendingNum} onPendingConsumed={() => setPendingNum(null)} />
+        {/* Tabs */}
+        <View style={s.tabs}>
+          <Animated.View style={[s.tabBg, { left: tabBgLeft }]} />
+          <TouchableOpacity style={s.tab} onPress={() => switchTab('dial')} activeOpacity={0.8}>
+            <Text style={[s.tabText, tab === 'dial' && s.tabTextOn]}>Dial</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={s.tab} onPress={() => switchTab('recents')} activeOpacity={0.8}>
+            <Text style={[s.tabText, tab === 'recents' && s.tabTextOn]}>Recents</Text>
+          </TouchableOpacity>
         </View>
-        <View style={[s.panel, tab !== 'recents' && s.hidden]}>
-          <RecentsScreen onSelectNumber={handleSelectFromRecents} />
-        </View>
-      </View>
 
-      {/* Privacy Footer */}
-      <View style={s.footer}>
-        <View style={s.footerDot} />
-        <Text style={s.footerText}>NoSave doesn't store or transmit your data</Text>
-      </View>
-    </SafeAreaView>
+        {/* Panels */}
+        <View style={s.panels}>
+          <View style={[s.panel, tab !== 'dial' && s.hidden]}>
+            <DialScreen pendingNum={pendingNum} onPendingConsumed={() => setPendingNum(null)} />
+          </View>
+          <View style={[s.panel, tab !== 'recents' && s.hidden]}>
+            <RecentsScreen onSelectNumber={handleSelectFromRecents} />
+          </View>
+        </View>
+
+        {/* Privacy Footer */}
+        <View style={s.footer}>
+          <View style={s.footerDot} />
+          <Text style={s.footerText}>NoSave doesn't store or transmit your data</Text>
+        </View>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const s = StyleSheet.create({
-  safe: { 
-    flex: 1, 
-    backgroundColor: '#F7F5F2',
-    // Ensures content doesn't hide behind the bottom navigation bar
-    paddingBottom: Platform.OS === 'android' ? 0 : 0 
-  },
-  topbar: { 
+  mainContainer: { flex: 1, backgroundColor: '#F7F5F2' },
+  safe:       { flex: 1 },
+  topbar:     { 
     flexDirection: 'row', 
     alignItems: 'center', 
     justifyContent: 'space-between', 
     paddingHorizontal: 20, 
     paddingVertical: 14,
-    // THE FIX: Push content down below the clock/status bar
+    // FIXES CROPPING:
     marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 
   },
   topbarLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
