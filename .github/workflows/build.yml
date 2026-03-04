@@ -27,12 +27,17 @@ jobs:
 
       - name: Build APK (Optimized Release)
         run: |
-          # 1. Install Expo CLI locally
+          # 1. Generate the android folder
           npx expo prebuild --platform android
           
-          # 2. Navigate to the generated folder
-          cd android
+          # 2. FIX: Remove the problematic splashscreen file that is causing the error
+          rm -f android/app/src/main/res/drawable/splashscreen.xml
           
-          # 3. Build the Release version (This handles shrinking & lag)
+          # 3. FIX: Clean up the styles to remove any background color references that don't exist
+          find android/app/src/main/res/values -name "styles.xml" -exec sed -i 's/@drawable\/splashscreen/@android:color\/transparent/g' {} +
+          find android/app/src/main/res/values -name "colors.xml" -exec sed -i '/splashscreen_background/d' {} +
+
+          # 4. Build the final small, fast APK
+          cd android
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
