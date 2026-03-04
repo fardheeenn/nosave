@@ -105,8 +105,21 @@ export default function App() {
 }
 
 const s = StyleSheet.create({
-  safe:       { flex: 1, backgroundColor: '#F7F5F2' },
-  topbar:     { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 14 },
+  safe: { 
+    flex: 1, 
+    backgroundColor: '#F7F5F2',
+    // Ensures content doesn't hide behind the bottom navigation bar
+    paddingBottom: Platform.OS === 'android' ? 0 : 0 
+  },
+  topbar: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    paddingHorizontal: 20, 
+    paddingVertical: 14,
+    // THE FIX: Push content down below the clock/status bar
+    marginTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 
+  },
   topbarLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   logoChip:   { width: 36, height: 36, borderRadius: 11, backgroundColor: '#1A1814', alignItems: 'center', justifyContent: 'center' },
   appName:    { fontSize: 17, fontWeight: '800', color: '#1A1814', letterSpacing: -0.5 },
