@@ -47,4 +47,4 @@ jobs:
         with:
           name: NoSave-Final-App
           # This finds the APK regardless of the folder name
-          path: android/app/build/outputs/apk/**/*.apk  
+          path: android/app/build/outputs/apk/**/*.apk
